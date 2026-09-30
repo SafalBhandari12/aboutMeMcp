@@ -1,4 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/server";
+import { StdioServerTransport } from "@modelcontextprotocol/server/stdio";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
@@ -54,17 +55,20 @@ server.registerResource(
     mimeType: "text/markdown",
   },
   async (uri) => {
-    const resumePath = path.join(process.cwd(), "data", "resume.md");
+    const resumePath = path.join(process.cwd(), "data", "RESUME.md");
 
     const resume = await readFile(resumePath, "utf-8");
     return {
       contents: [
         {
-          uri: "slfdkj",
+          uri: uri.href,
           mimeType: "text/markdown",
-          text: "# My Resume\n\nThis is my resume in markdown format.",
+          text: resume,
         },
       ],
     };
   },
 );
+
+const transport = new StdioServerTransport();
+await server.connect(transport);
