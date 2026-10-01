@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "tsx src/client.ts",
+    "start:http": "MCP_TRANSPORT=http tsx src/client.ts",
+    "server:http": "tsx src/server.ts --http",
     "dev": "tsx watch src/server.ts",
     "build": "tsc"
   },
@@ -14,6 +16,7 @@
   "type": "module",
   "dependencies": {
     "@modelcontextprotocol/client": "^2.2.0",
+    "@modelcontextprotocol/node": "^2.1.0",
     "@modelcontextprotocol/server": "^2.2.0",
     "dotenv": "^18.0.4",
     "openai": "^7.23.0",

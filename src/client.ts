@@ -1,5 +1,8 @@
 import dotenv from "dotenv";
-import { Client } from "@modelcontextprotocol/client";
+import {
+  Client,
+  StreamableHTTPClientTransport,
+} from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import OpenAI from "openai";
 import type {
@@ -16,10 +19,16 @@ if (!model) {
   throw new Error("OPENAI_MODEL is not set in .env");
 }
 
-const transport = new StdioClientTransport({
-  command: "npx",
-  args: ["tsx", "src/server.ts"],
-});
+// With HTTP the server must already be running (npm run server:http).
+const transport =
+  process.env.MCP_TRANSPORT === "http"
+    ? new StreamableHTTPClientTransport(
+        new URL(process.env.MCP_URL ?? "http://127.0.0.1:3000/mcp"),
+      )
+    : new StdioClientTransport({
+        command: "npx",
+        args: ["tsx", "src/server.ts"],
+      });
 
 const client = new Client({
   name: "My Personal MCP Client",
